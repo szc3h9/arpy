@@ -27,6 +27,7 @@ from random import randint
 import threading, os, sys, optparse, time
 import atexit
 
+
 options = optparse.OptionParser(usage='%prog -t <Target IP> -g <Gateway IP> -i <Interface>', description='ARP MiTM Tool')
 options.add_option('-t', '--target', type='string', dest='target', help='The Target IP')
 options.add_option('-g', '--gateway', type='string', dest='gateway', help='The Gateway')
@@ -80,9 +81,10 @@ def banner():
             """ + bcolours.ENDC
     return banner
 
+
 def unprivileged_user_print(username):
-    print "\n" + bcolours.FAIL + "You are running this as " + bcolours.WARNING + user.CURRENT_USER_NAME + bcolours.FAIL + " which is not" + bcolours.WARNING + " root." + bcolours.FAIL
-    print "Consider running it as root." + bcolours.ENDC
+    print("\n" + bcolours.FAIL + "You are running this as " + bcolours.WARNING + user.CURRENT_USER_NAME + bcolours.FAIL + " which is not" + bcolours.WARNING + " root." + bcolours.FAIL)
+    print("Consider running it as root." + bcolours.ENDC)
 
 def setup_ipv_forwarding():
     if not dns_sniff_gource:
@@ -125,7 +127,7 @@ def dnshandle(pkt):
         sys.stdout = open(random_filename+'parsed_nmap', 'a')
         FQDN = pkt.getlayer(scapy.DNS).qd.qname
         domain = FQDN.split('.')
-        print str(time.time())[:-3] + "|" + target + "|A|" + str(domain[1]) + '/' + str(FQDN)
+        print(str(time.time())[:-3] + "|" + target + "|A|" + str(domain[1]) + '/' + str(FQDN))
     else:
         if pkt.haslayer(scapy.DNS):
             print(bcolours.OKBLUE + pkt.getlayer(scapy.IP).src + '\t' + pkt.getlayer(scapy.IP).dst + '\t' + bcolours.WARNING + pkt.getlayer(scapy.DNS).qd.qname + bcolours.ENDC)
@@ -141,9 +143,9 @@ def rawhandle(pkt):
                 print(bcolours.OKBLUE + '\n[Info] Found the following (' + layer.name + ' layer): ' + layer.src + " -> " + layer.dst + bcolours.ENDC)
                 tcpdata = layer.getlayer(scapy.Raw).load
                 if not opts.verbose:
-                    print tcpdata
+                    print(tcpdata)
                 else:
-                    print layer.show()
+                    print(layer.show())
             else:
                 break
 
@@ -182,7 +184,10 @@ def start_poisen(target, interface, scapy_filter):
 
 def main():
     try:
-        if user.CURRENT_USER_ID <> 0:
+        if scapy.conf.use_pcap != 1:
+            scapy.conf.use_pcap = True
+
+        if user.CURRENT_USER_ID != 0:
             unprivileged_user_print(user.CURRENT_USER_NAME)
 
         if dns_sniff_gource:
@@ -190,7 +195,7 @@ def main():
 
         #This check is to see if anything but gource parser is set
         if (not dns_sniff_gource) or (dns_sniff or sniff_pkts):
-            print banner()
+            print(banner())
             #check if we actually have some info
             if target == None or gateway == None and interface == None:
                 options.print_help()
