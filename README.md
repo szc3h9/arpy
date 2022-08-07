@@ -14,10 +14,11 @@ It provides 3 targeted functions:
 * Darwin 14.3.0 Darwin Kernel Version 14.3.0 (Mac OS X)
 
 ## Requirements
-* Python 2.7
+* Python 2.7 / Python 3.x
 * Gource
 * Scapy
 * libdnet
+* libpcap
 
 ## Installation
 #### Gource
@@ -26,16 +27,19 @@ brew install gource
 ```
 #### Scapy
 ```
-pip install scapy
+#pip install scapy
+pip3 install scapy
 ```
 #### libdnet
+
+```
+brew install libdnet
 ```
 
-$ git clone https://github.com/dugsong/libdnet.git
-$ cd libdnet
-$ ./configure && make && make install
-cd python
-python setup.py install
+#### libpcap
+
+```
+brew install libpcap
 ```
 
 ## Sample Commands
